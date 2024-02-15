@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheckRight;
 
     public Rigidbody2D rb;
+    public BoxCollider2D crouchedHb;
+    public BoxCollider2D standingHb;
     public Animator animator;
     public SpriteRenderer spriteRenderer;
 
@@ -60,6 +62,14 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(new Vector2(0f, jumpForce));
             isJumping = false;
         }
+        if (Input.GetKeyDown("DownArrow"))
+        {
+            if (!isJumping && isGrounded)
+            {
+                GetComponent<BoxCollider2D>().size = new Vector2(1f, 0.5f);
+            }
+        }
+
     }
 
     void Flip(float _velocity)
