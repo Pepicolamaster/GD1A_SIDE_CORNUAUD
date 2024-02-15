@@ -10,18 +10,42 @@ public class TEST : MonoBehaviour
     private float horizontal;
     public float speed;
     public float jumpingPower;
+    public float crouchingSpeed;
     public bool isFacingRight = true;
+    public bool isStanding = true;
+    public Animator animator;
+
+    //pour le crouch
+    public SpriteRenderer SpriteRenderer;
+    public Sprite Standing;
+    public Sprite Crouching;
+    public BoxCollider2D Collider;
+    public Vector2 StandingSize;
+    public Vector2 CrouchingSize;
 
     //références au rigidbody du joueur, la position du groundCheck et la layer du sol
     public Rigidbody2D rb;
     public Transform groundCheck;
     public LayerMask groundLayer;
 
+
+    private void Start()
+    {
+        SpriteRenderer = GetComponent<SpriteRenderer>();
+        SpriteRenderer.sprite = Standing;
+
+        StandingSize = Collider.size;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
         //renvoie 1 0 ou -1 selon la direction
         horizontal = Input.GetAxisRaw("Horizontal");
+
+        //float characterVelocity = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
+        //animator.SetFloat("speed", characterVelocity); //on se réfère à l'animator pouir lui envoyer la vitesse du joueur
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
@@ -36,6 +60,20 @@ public class TEST : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            SpriteRenderer.sprite = Crouching;
+            Collider.size = CrouchingSize;
+            speed = speed / 2;
+        }
+
+        if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            SpriteRenderer.sprite = Standing;
+            Collider.size = StandingSize;
+            speed = speed * 2;
+        }
+
         Flip();
     }
 
@@ -47,7 +85,7 @@ public class TEST : MonoBehaviour
 
     private bool IsGrounded() //pour le saut du joueur
     {
-        //on définit un cercle : son centre est la position du groundCheck, son rayon est de 0.2 etil check le layer du sol
+        //on définit un cercle : son centre est la position du groundCheck, son rayon est de 0.2 et il check le layer du sol
         //créé un cercle invisible qui permet de sauter s'il touche le sol
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
@@ -66,5 +104,10 @@ public class TEST : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
+    }
+
+    private void Crouch()
+    {
+
     }
 }
