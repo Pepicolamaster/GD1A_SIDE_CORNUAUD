@@ -9,19 +9,23 @@ public class TEST : MonoBehaviour
     //variables pour l'input horizontal, la vitesse, puissance de saut et un booléen pour savoir si le joueur regarde à droite
     private float horizontal;
     public float speed;
+    public float walkingSpeed;
+    public float crouchSpeed;
     public float jumpingPower;
-    public float crouchingSpeed;
     public bool isFacingRight = true;
     public bool isStanding = true;
     public Animator animator;
 
     //pour le crouch
-    public SpriteRenderer SpriteRenderer;
-    public Sprite Standing;
-    public Sprite Crouching;
+    //public SpriteRenderer SpriteRenderer;
+    //public Sprite Standing;
+    //public Sprite Crouching;
     public BoxCollider2D Collider;
     public Vector2 StandingSize;
+    public Vector2 StandingOffset;
     public Vector2 CrouchingSize;
+    public Vector2 CrouchingOffset;
+    public bool isCrouching = false;
 
     //références au rigidbody du joueur, la position du groundCheck et la layer du sol
     public Rigidbody2D rb;
@@ -31,8 +35,8 @@ public class TEST : MonoBehaviour
 
     private void Start()
     {
-        SpriteRenderer = GetComponent<SpriteRenderer>();
-        SpriteRenderer.sprite = Standing;
+        //SpriteRenderer = GetComponent<SpriteRenderer>();
+        //SpriteRenderer.sprite = Standing;
 
         StandingSize = Collider.size;
     }
@@ -44,10 +48,10 @@ public class TEST : MonoBehaviour
         //renvoie 1 0 ou -1 selon la direction
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        //float characterVelocity = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
-        //animator.SetFloat("speed", characterVelocity); //on se réfère à l'animator pouir lui envoyer la vitesse du joueur
+        float characterVelocity = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
+        animator.SetFloat("speed", characterVelocity); //on se réfère à l'animator pouir lui envoyer la vitesse du joueur
 
-        if (Input.GetButtonDown("Jump") && IsGrounded())
+        if (Input.GetButtonDown("Jump") && IsGrounded() && !isCrouching)
         {
             //on assigne au Y du rigidbody le jumpingPower définit
             rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
@@ -55,23 +59,39 @@ public class TEST : MonoBehaviour
 
         //si le joueur bouge toujours vers le haut mais la touche saut est lâchée, on multiplie Y par 0.5
         //permet de sauter plus haut en maintenant la touche saut
-        if (Input.GetButtonUp("Jump") && rb.velocity.y >0f)
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow) && rb.velocity.y == 0)
         {
-            SpriteRenderer.sprite = Crouching;
             Collider.size = CrouchingSize;
-            speed = speed / 2;
+            Collider.offset = CrouchingOffset;
+            speed = crouchSpeed;
+            isCrouching = true;
+            animator.SetBool("isCrouching", true);
+            float characterVelocityCrouched = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
+            animator.SetFloat("speed", characterVelocityCrouched);
+            if (Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                isCrouching = false;
+                animator.SetBool("isCrouching", false);
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.DownArrow))
         {
-            SpriteRenderer.sprite = Standing;
             Collider.size = StandingSize;
-            speed = speed * 2;
+            Collider.offset = StandingOffset;
+            speed = walkingSpeed;
+            isStanding = true;
+            animator.SetBool("isCrouching", false);
+            if (Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                isCrouching = false;
+                animator.SetBool("isCrouching", false);
+            }
         }
 
         Flip();
@@ -104,10 +124,5 @@ public class TEST : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
-    }
-
-    private void Crouch()
-    {
-
     }
 }

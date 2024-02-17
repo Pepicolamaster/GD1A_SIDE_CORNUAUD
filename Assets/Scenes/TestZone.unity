@@ -288,17 +288,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 8
+  walkingSpeed: 8
+  crouchSpeed: 5
   jumpingPower: 16
-  crouchingSpeed: 0
   isFacingRight: 1
   isStanding: 1
   animator: {fileID: 247677203}
-  SpriteRenderer: {fileID: 247677200}
-  Standing: {fileID: 21300000, guid: 13e2a9e3b9573d4438cae8d2a45165ee, type: 3}
-  Crouching: {fileID: -2096800863, guid: 23861db7cb5868245af2e177670a1551, type: 3}
   Collider: {fileID: 247677199}
-  StandingSize: {x: 0, y: 0}
-  CrouchingSize: {x: 11.976319, y: 5.7521405}
+  StandingSize: {x: 7.1303463, y: 16.459442}
+  StandingOffset: {x: 0.2528968, y: -1.7702794}
+  CrouchingSize: {x: 12.032747, y: 5.82698}
+  CrouchingOffset: {x: 0.030056, y: -7.0865097}
+  isCrouching: 0
   rb: {fileID: 247677198}
   groundCheck: {fileID: 817887432}
   groundLayer:
