@@ -87,7 +87,7 @@ public class TEST : MonoBehaviour
             speed = walkingSpeed;
             isStanding = true;
             animator.SetBool("isCrouching", false);
-            if (Input.GetKeyUp(KeyCode.DownArrow))
+            if (Input.GetKeyUp(KeyCode.DownArrow)) //apparement ce if sert à sauter ?? Si elle est supprimée on ne peut plus sauter
             {
                 isCrouching = false;
                 animator.SetBool("isCrouching", false);
