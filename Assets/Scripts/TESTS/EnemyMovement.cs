@@ -43,6 +43,14 @@ public class EnnemyMovement : MonoBehaviour
             currentPoint = pointB.transform;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.CompareTag("Player"))
+        {
+            collision.gameObject.GetComponent<health>().TakeDamage();
+        }
+    }
     private void Flip()
     {
         Vector3 localScale = transform.localScale;

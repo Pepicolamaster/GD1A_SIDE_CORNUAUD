@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public class TEST : MonoBehaviour
+public class MovementTest : MonoBehaviour
 {
     //variables pour l'input horizontal, la vitesse, puissance de saut et un booléen pour savoir si le joueur regarde à droite
     private float horizontal;
@@ -31,6 +31,8 @@ public class TEST : MonoBehaviour
     public Rigidbody2D rb;
     public Transform groundCheck;
     public LayerMask groundLayer;
+
+    public bool isDead = false;
 
 
     private void Start()
@@ -100,7 +102,10 @@ public class TEST : MonoBehaviour
     private void FixedUpdate()
     {
         //on change la vélocité du Rigidbody par l'input horizontal * la vitesse
-        rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        if (!isDead)
+        {
+            rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        }
     }
 
     private bool IsGrounded() //pour le saut du joueur
@@ -115,7 +120,7 @@ public class TEST : MonoBehaviour
         //SI le joueur regarde vers la droite ET l'input horizontal est inférieur à 0
         //OU le joueur ne regarde pas vers la droite ET l'input horizontal est supérieur à 0
         //on FLIP le joueur
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
+        if ((isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f) && !isDead)
         {
             //isFacingRight devient son opposé (TRUE ou FALSE)
             //on multiplie le scale X du joueur par -1
@@ -124,5 +129,10 @@ public class TEST : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
+    }
+
+    public void Die()
+    {
+        isDead = true;
     }
 }

@@ -1,24 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class health : MonoBehaviour
 {
     public int maxHealth = 3;
-    public int currentHealth;
+    public int currentHealth = 3;
+    public Rigidbody2D rb;
+    public MovementTest movement;
+    public Image sprite;
+
+    //sprite barre de vie
+
+    public Animator anim;
     // Start is called before the first frame update
     void Start()
     {
         currentHealth = maxHealth; //la vie actuele est égale à la vie max au lancement du jeu
     }
 
-    void TakeDamage(int amount)
+    public void TakeDamage()
     {
-        currentHealth -= amount;
+        currentHealth -= 1;
 
-        if(currentHealth <= 0)
+        if (currentHealth <= 0)
         {
-            //on est mort, check pour ne pas voir une vie négative
+            //mort, check pour ne pas voir une vie négative
+            //animation de mort
+            anim.SetBool("isDead", true);
+            rb.simulated = false;
+            movement.Die();
         }
+    }
+
+    public int GetCurrentHealth()
+    {
+        return currentHealth;
     }
 }
