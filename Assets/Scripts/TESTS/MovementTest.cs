@@ -49,10 +49,14 @@ public class MovementTest : MonoBehaviour
     {
         //MOUVEMENT DROITE GAUCHE
         //renvoie 1 0 ou -1 selon la direction
-        horizontal = Input.GetAxisRaw("Horizontal");
+        if (!isDead)
+        {
+            horizontal = Input.GetAxisRaw("Horizontal");
 
-        float characterVelocity = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
-        animator.SetFloat("speed", characterVelocity); //on se réfère à l'animator pouir lui envoyer la vitesse du joueur
+            float characterVelocity = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
+            animator.SetFloat("speed", characterVelocity); //on se réfère à l'animator pouir lui envoyer la vitesse du joueur
+
+        }
 
 
 
@@ -146,7 +150,7 @@ public class MovementTest : MonoBehaviour
     {
         //on définit un cercle : son centre est la position du groundCheck, son rayon est de 0.2 et il check le layer du sol
         //créé un cercle invisible qui permet de sauter s'il touche le sol
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
+        return Physics2D.OverlapCircle(groundCheck.position, 0.4f, groundLayer);
     }
 
     private void Flip()

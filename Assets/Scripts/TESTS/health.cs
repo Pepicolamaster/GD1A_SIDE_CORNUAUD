@@ -29,7 +29,7 @@ public class health : MonoBehaviour
             //mort, check pour ne pas voir une vie négative
             //animation de mort
             anim.SetBool("isDead", true);
-            rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+            rb.freezeRotation = false;
             movement.Die();
         }
     }
