@@ -6,6 +6,9 @@ using UnityEngine.UI;
 public class healthUI : MonoBehaviour
 {
     public health currentHealth;
+    public Animator anim;
+    public GameObject img;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,31 +18,25 @@ public class healthUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        LifeBar();
     }
     void LifeBar()
     {
-        Sprite threeHP = Resources.Load<Sprite>("healthbar_prov_spritesheet_2");
-        Sprite twoHP = Resources.Load<Sprite>("healthbar_prov_spritesheet_1");
-        Sprite oneHP = Resources.Load<Sprite>("healthbar_prov_spritesheet_0");
-
         if (currentHealth.GetCurrentHealth() >= 3)
         {
-            gameObject.GetComponent<Image>().sprite = threeHP;
+            anim.Play("3hp");
         }
-
-            if (currentHealth.GetCurrentHealth() == 2)
+        if (currentHealth.GetCurrentHealth() == 2)
         {
-            gameObject.GetComponent<Image>().sprite = twoHP;
+            anim.Play("2hp");
         }
-
         if (currentHealth.GetCurrentHealth() == 1)
         {
-            gameObject.GetComponent<Image>().sprite = oneHP;
+            anim.Play("1hp");
         }
         if (currentHealth.GetCurrentHealth() <= 0)
         {
-            gameObject.GetComponent<Image>().enabled = false;
+            img.GetComponent<Image>().enabled = false;
         }
     }
 }

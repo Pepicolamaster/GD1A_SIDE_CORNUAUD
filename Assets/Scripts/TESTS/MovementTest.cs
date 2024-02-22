@@ -27,6 +27,9 @@ public class MovementTest : MonoBehaviour
     public Vector2 CrouchingOffset;
     public bool isCrouching = false;
 
+    //pour le double saut
+    public int jumpCount = 0;
+
     //références au rigidbody du joueur, la position du groundCheck et la layer du sol
     public Rigidbody2D rb;
     public Transform groundCheck;
@@ -37,9 +40,6 @@ public class MovementTest : MonoBehaviour
 
     private void Start()
     {
-        //SpriteRenderer = GetComponent<SpriteRenderer>();
-        //SpriteRenderer.sprite = Standing;
-
         StandingSize = Collider.size;
     }
 
@@ -47,26 +47,64 @@ public class MovementTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //MOUVEMENT DROITE GAUCHE
         //renvoie 1 0 ou -1 selon la direction
         horizontal = Input.GetAxisRaw("Horizontal");
 
         float characterVelocity = Mathf.Abs(rb.velocity.x); //dans une variable, on convertit la valeur négative en valeur positive (mouvement vers la gauche = -1) l'animator ne comprend pas un chiffre négatif pour Speed
         animator.SetFloat("speed", characterVelocity); //on se réfère à l'animator pouir lui envoyer la vitesse du joueur
 
-        if (Input.GetButtonDown("Jump") && IsGrounded() && !isCrouching)
+
+
+
+
+
+        //SAUT
+        if (IsGrounded())
         {
-            //on assigne au Y du rigidbody le jumpingPower définit
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            jumpCount = 0;
+        }
+        if (jumpCount < 1)
+        {
+            if (Input.GetButtonDown("Jump") && IsGrounded() && !isCrouching && !isDead)
+            {
+                //on assigne au Y du rigidbody le jumpingPower définit
+                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+                jumpCount += 1;
+            }
+            if (Input.GetButtonDown("Jump") && !isCrouching &&!isDead)
+            {
+                //on assigne au Y du rigidbody le jumpingPower définit
+                rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+                jumpCount += 1;
+            }
+
+            //si le joueur bouge toujours vers le haut mais la touche saut est lâchée, on multiplie Y par 0.5
+            //permet de sauter plus haut en maintenant la touche saut
+            if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            }
         }
 
-        //si le joueur bouge toujours vers le haut mais la touche saut est lâchée, on multiplie Y par 0.5
-        //permet de sauter plus haut en maintenant la touche saut
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow) && rb.velocity.y == 0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //CROUCH
+        if (Input.GetKeyDown(KeyCode.DownArrow) && rb.velocity.y == 0) //s'accroupir
         {
             Collider.size = CrouchingSize;
             Collider.offset = CrouchingOffset;
@@ -82,18 +120,14 @@ public class MovementTest : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.DownArrow))
+        if (Input.GetKeyUp(KeyCode.DownArrow)) //se relever
         {
             Collider.size = StandingSize;
             Collider.offset = StandingOffset;
             speed = walkingSpeed;
             isStanding = true;
             animator.SetBool("isCrouching", false);
-            if (Input.GetKeyUp(KeyCode.DownArrow)) //apparement ce if sert à sauter ?? Si elle est supprimée on ne peut plus sauter
-            {
-                isCrouching = false;
-                animator.SetBool("isCrouching", false);
-            }
+            isCrouching = false;
         }
 
         Flip();

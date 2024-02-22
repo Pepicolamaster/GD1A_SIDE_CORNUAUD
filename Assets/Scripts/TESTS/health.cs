@@ -17,7 +17,7 @@ public class health : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentHealth = maxHealth; //la vie actuele est égale à la vie max au lancement du jeu
+        currentHealth = maxHealth; //la vie actuelle est égale à la vie max au lancement du jeu
     }
 
     public void TakeDamage()
@@ -29,7 +29,7 @@ public class health : MonoBehaviour
             //mort, check pour ne pas voir une vie négative
             //animation de mort
             anim.SetBool("isDead", true);
-            rb.simulated = false;
+            rb.constraints = RigidbodyConstraints2D.FreezePositionX;
             movement.Die();
         }
     }
