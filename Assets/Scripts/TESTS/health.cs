@@ -38,4 +38,12 @@ public class health : MonoBehaviour
     {
         return currentHealth;
     }
+
+    public void OneShot()
+    {
+        currentHealth = 0;
+        anim.SetBool("isDead", true);
+        rb.freezeRotation = false;
+        movement.Die();
+    }
 }
