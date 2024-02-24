@@ -35,6 +35,9 @@ public class MovementTest : MonoBehaviour
     public Transform groundCheck;
     public LayerMask groundLayer;
 
+    //collectibles count
+    [SerializeField] public int coins;
+
     public bool isDead = false;
 
 
@@ -172,5 +175,10 @@ public class MovementTest : MonoBehaviour
     public void Die()
     {
         isDead = true;
+    }
+
+    public void AddCoins()
+    {
+        coins++;
     }
 }
