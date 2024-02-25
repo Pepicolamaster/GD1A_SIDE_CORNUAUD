@@ -4,7 +4,7 @@ Bonjour !
 
 Voici le repository de The Descent.
 
-Une archive sur le visuel du jeu est présente dans le repository.
+Une archive sur le visuel du jeu a été envoyée par mail à M.FALGUIERES.
 
 Contrôles :
 FLECHE GAUCHE-DROITE - Se déplacer
